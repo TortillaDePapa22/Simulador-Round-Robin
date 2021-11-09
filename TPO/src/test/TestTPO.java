@@ -1,12 +1,14 @@
 package test;
 
 import java.util.Scanner;
+import java.util.Timer;
 
 import api.AdministradorDeColasTDA;
-import api.ColaPrioridadTDA;
+import apis.ColaPrioridadTDA;
 import impl.AdministradorDeColas;
 import impl.ColaPrioridadDA;
 import impl.Proceso;
+import impl.RoundRobin;
 
 public class TestTPO {
 
@@ -14,7 +16,7 @@ public class TestTPO {
 		// TODO Auto-generated method stub
 		
 		AdministradorDeColasTDA admin = new AdministradorDeColas();
-		Proceso pro1 = new Proceso();
+		RoundRobin adminRR = new RoundRobin(admin); //ACA SE VA A REALIZAR EL ROUND ROBIN
 		
 		int cantidadPuestos = 0;
 		Scanner sc= new Scanner(System.in);
@@ -22,14 +24,29 @@ public class TestTPO {
 		System.out.print("Ingrese la cantidad de servidores a utilizar: ");
 		cantidadPuestos = sc.nextInt();
 		
-		admin.inicializar(cantidadPuestos);
+		admin.inicializar(cantidadPuestos); //Inicializo servers
+		
+		Timer temporizador = new Timer();
 	
-		System.out.println("Impreso.");
+		System.out.println("-------------------------------------------------");
 		
-		admin.acolar(1,4);//proceso 1
-		admin.acolar(4,2);//proceso 2
-		admin.acolar(6,3);//proceso 3
+		admin.acolar(97,4);//proceso 1
+		admin.acolar(98,2);//proceso 2
+		admin.acolar(99,3);//proceso 3
+		admin.acolar(55,2);
+		admin.acolar(84,7);
+		admin.acolar(15,9);
+		admin.acolar(95,1);
+		admin.acolar(53,3);
+		admin.acolar(39,4);
+		admin.acolar(48,8);
 		
+		admin.desacolar();
+		
+		admin.acolar(100,1);
+		
+	//	adminRR.setTemporizador(temporizador);
+		//temporizador.scheduleAtFixedRate(adminRR, 0, 1000); //Comienza el proceso
 		
 		
 		
@@ -38,6 +55,11 @@ public class TestTPO {
 	
 	
 	
+	
+	
+	
+	
+//---------------------------------------------------------------------------------
 	//Imprimir Cola Prioridad
 	public static void imprimir (apis.ColaPrioridadTDA c) {
 		apis.ColaPrioridadTDA aux = new ColaPrioridadDA();

@@ -2,16 +2,16 @@ package impl;
 
 public class Proceso {
 	
-	String nombre;
+	int nombre;
 
 	int tiempoEst;
-	private int idPro;
+	private int PID;
 	
-	public String getNombre() {
+	public int getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setNombre(int nombre) {
 		this.nombre = nombre;
 	}
 
@@ -24,12 +24,12 @@ public class Proceso {
 	}
 
 
-	public int getIdPro() {
-		return idPro;
+	public int getPID() {
+		return PID;
 	}
 
-	public void setIdPro(int idPro) {
-		this.idPro = idPro;
+	public void setPID(int idPro) {
+		this.PID = idPro;
 	}
 	
 	

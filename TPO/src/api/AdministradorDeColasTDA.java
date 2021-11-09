@@ -1,5 +1,6 @@
 package api;
 
+
 import apis.ColaPrioridadTDA;
 import apis.ColaTDA;
 import apis.DiccionarioSimpleTDA;
@@ -16,5 +17,6 @@ public interface AdministradorDeColasTDA {
 	int puestoProximoElem(int idElemento);	//Siempre que este inicializado y cola no vacia
 	int puestoDelElem(int idElemento); 		//Siempre que este inicializado y cola no vacia
 	DiccionarioSimpleTDA elementos(); 		//Siempre que este inicializado y cola no vacia
+
 	
 }
