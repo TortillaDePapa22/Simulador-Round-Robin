@@ -2,7 +2,6 @@ package api;
 
 
 import apis.ColaPrioridadTDA;
-import apis.ColaTDA;
 import apis.DiccionarioSimpleTDA;
 
 public interface AdministradorDeColasTDA {

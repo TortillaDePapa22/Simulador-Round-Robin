@@ -1,7 +1,5 @@
 package impl;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 import api.AdministradorDeColasTDA;
 import apis.ColaPrioridadTDA;
@@ -11,10 +9,10 @@ import apis.DiccionarioSimpleTDA;
 public class AdministradorDeColas implements AdministradorDeColasTDA{
 	
 
-	Server[] vectSer;
+	static Server[] vectSer;
 	
 	
-	ColaPrioridadTDA Robin = new ColaPrioridadDA(); // aca es donde va la cola de procesos
+	static ColaPrioridadTDA Robin = new ColaPrioridadDA(); // aca es donde va la cola de procesos
 	DiccionarioSimpleTDA RobinDic = new DicSimpleL(); 
 	Proceso process;
 	static int copCantidad;
@@ -22,12 +20,6 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 	int contadoridProceso = 0, sumTiempos = 0, copIndice = 0;
 
 
-
-	
-	
-	
-	
-	
 	@Override
 	public void inicializar(int cantidad) { //Inicializa sum de tiempo de espera de los puestos
 		// TODO Auto-generated method stub
@@ -39,7 +31,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		vectSer = new Server[10]; //Maximo 10 servers.
 		
 		
-		for(int i = 0; i<cantidad; i++) {
+		for(int i = 0; i < cantidad; i++) {
 			vectSer[i] = new Server();
 			vectSer[i].nombreServer = "Server " + i;
 			vectSer[i].idServer = i;

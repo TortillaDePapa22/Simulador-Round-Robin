@@ -5,9 +5,5 @@ public class Server {
 	int idServer;
 	int tiempoLiberacion;
 	int idProcesoEnServer;
-	
-	
-	
-		
-	
+
 }

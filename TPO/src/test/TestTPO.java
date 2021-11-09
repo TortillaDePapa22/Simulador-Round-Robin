@@ -4,14 +4,13 @@ import java.util.Scanner;
 import java.util.Timer;
 
 import api.AdministradorDeColasTDA;
-import apis.ColaPrioridadTDA;
 import impl.AdministradorDeColas;
 import impl.ColaPrioridadDA;
-import impl.Proceso;
 import impl.RoundRobin;
 
 public class TestTPO {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
@@ -26,7 +25,7 @@ public class TestTPO {
 		
 		admin.inicializar(cantidadPuestos); //Inicializo servers
 		
-		Timer temporizador = new Timer();
+
 	
 		System.out.println("-------------------------------------------------");
 		
@@ -44,12 +43,20 @@ public class TestTPO {
 		admin.desacolar();
 		
 		admin.acolar(100,1);
+		admin.acolar(48,8);
+		admin.acolar(42,8);
+		admin.acolar(12,8);
+		admin.acolar(7,8);
+		admin.acolar(91,8);
+		admin.acolar(106,5);
+		System.out.println("\n \nQuantum: " + admin.estimado()); //quantum
+	
 		
-		admin.estimado(); //quantum
-		
+		Timer temporizador = new Timer();
+
 		adminRR.setTemporizador(temporizador);
-		temporizador.scheduleAtFixedRate(adminRR, 0, admin.estimado()); //Comienza el proceso
-		
+		temporizador.scheduleAtFixedRate(adminRR, 0, 1000); //Comienza el proceso
+		System.out.println("ROUND ROBIN COMENZADO... \nHora comienzo simulador: " + adminRR.horaEjecucion() + "\n");
 		
 		
 		
