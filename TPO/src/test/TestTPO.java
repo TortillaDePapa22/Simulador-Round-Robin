@@ -4,9 +4,10 @@ import java.util.Scanner;
 import java.util.Timer;
 
 import api.AdministradorDeColasTDA;
+import api.ColaPrioridadTDA;
 import impl.AdministradorDeColas;
-import impl.ColaPrioridadDA;
 import impl.RoundRobin;
+import implTDA.ColaPrioridadDA;
 
 public class TestTPO {
 
@@ -27,7 +28,7 @@ public class TestTPO {
 		
 
 	
-		System.out.println("-------------------------------------------------");
+		System.out.println("\n-------------------------------------------------\n");
 		
 		admin.acolar(97,4);//proceso 1
 		admin.acolar(98,2);//proceso 2
@@ -50,12 +51,12 @@ public class TestTPO {
 		admin.acolar(106,5);
 		System.out.println("\n \nQuantum: " + admin.estimado()); //quantum
 	
-		
+		RoundRobin.horaIni = adminRR.horaEjecucion();
 		Timer temporizador = new Timer();
-
+		System.out.println("\nROUND ROBIN COMENZADO... \nHora comienzo simulador:" + RoundRobin.horaIni + "\n");
 		adminRR.setTemporizador(temporizador);
 		temporizador.scheduleAtFixedRate(adminRR, 0, 1000); //Comienza el proceso
-		System.out.println("ROUND ROBIN COMENZADO... \nHora comienzo simulador: " + adminRR.horaEjecucion() + "\n");
+	
 		
 		
 		
@@ -69,8 +70,8 @@ public class TestTPO {
 	
 //---------------------------------------------------------------------------------
 	//Imprimir Cola Prioridad
-	public static void imprimir (apis.ColaPrioridadTDA c) {
-		apis.ColaPrioridadTDA aux = new ColaPrioridadDA();
+	public static void imprimir (ColaPrioridadTDA c) {
+		ColaPrioridadTDA aux = new ColaPrioridadDA();
 		aux.inicializarCola();
 		while(!c.colaVacia()) {
 			System.out.println(" " + c.primero() + " " + c.prioridad());
@@ -80,7 +81,7 @@ public class TestTPO {
 		pasar(aux,c);
 	}
 	
-	public static void pasar (apis.ColaPrioridadTDA origen, apis.ColaPrioridadTDA destino) {
+	public static void pasar (ColaPrioridadTDA origen, ColaPrioridadTDA destino) {
 		while(!origen.colaVacia()) {
 			destino.acolarPrioridad(origen.primero(), origen.prioridad());
 			origen.desacolar();

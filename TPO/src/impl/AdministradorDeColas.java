@@ -2,9 +2,11 @@ package impl;
 
 
 import api.AdministradorDeColasTDA;
-import apis.ColaPrioridadTDA;
-import apis.ColaTDA;
-import apis.DiccionarioSimpleTDA;
+import api.ColaPrioridadTDA;
+
+import api.DiccionarioSimpleTDA;
+import implTDA.ColaPrioridadDA;
+import implTDA.DicSimpleL;
 
 public class AdministradorDeColas implements AdministradorDeColasTDA{
 	
@@ -82,14 +84,16 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 
 	@Override
 	public void desacolar() {
-		int estimadoProcesoDesacolar;
+		int estimadoProcesoDesacolar, valor;
 		estimadoProcesoDesacolar = Robin.prioridad();
 		sumTiempos = sumTiempos - estimadoProcesoDesacolar;
 		copIndice--;
 		this.Robin.desacolar();
 		
-		String strID = String.format("%04d", contadoridProceso); //agrego 000
-		System.out.println("Proceso numero: " + strID + " desacolado");
+		valor = RobinDic.recuperar(Robin.primero());
+		
+		String strID = String.format("%04d", Robin.primero()); //agrego 000
+		System.out.println("Proceso numero: " + strID + " desacolado, valor: " + valor);
 		
 	}
 
