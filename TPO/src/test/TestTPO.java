@@ -45,8 +45,10 @@ public class TestTPO {
 		
 		admin.acolar(100,1);
 		
-	//	adminRR.setTemporizador(temporizador);
-		//temporizador.scheduleAtFixedRate(adminRR, 0, 1000); //Comienza el proceso
+		admin.estimado(); //quantum
+		
+		adminRR.setTemporizador(temporizador);
+		temporizador.scheduleAtFixedRate(adminRR, 0, admin.estimado()); //Comienza el proceso
 		
 		
 		

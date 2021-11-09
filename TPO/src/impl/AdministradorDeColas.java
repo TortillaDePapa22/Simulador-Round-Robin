@@ -10,23 +10,19 @@ import apis.DiccionarioSimpleTDA;
 
 public class AdministradorDeColas implements AdministradorDeColasTDA{
 	
-	class Server{
-		String nombreServer;
-		int idServer;
-		int tiempoLiberacion;
-		int idProcesoEnServer;
-	}
-	
+
 	Server[] vectSer;
 	
 	
 	ColaPrioridadTDA Robin = new ColaPrioridadDA(); // aca es donde va la cola de procesos
 	DiccionarioSimpleTDA RobinDic = new DicSimpleL(); 
 	Proceso process;
-	int copCantidad;
+	static int copCantidad;
+	static int quantum;
 	int contadoridProceso = 0, sumTiempos = 0, copIndice = 0;
 
-	static int quantum;
+
+
 	
 	
 	
@@ -37,6 +33,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		// TODO Auto-generated method stub
 
 		Robin.inicializarCola();
+		RobinDic.inicializarDiccionario();
 		copCantidad = cantidad;
 		
 		vectSer = new Server[10]; //Maximo 10 servers.
@@ -62,6 +59,8 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		aux.inicializarCola();
 		copiar(Robin,aux);
 		
+//CHEQUEAR CHEQUEO, COMPARA NOMBRE CON PID!!!!!!!!!!!!!!!!!!!!!!!!!
+		//chequeo si elemento existe en cola Robin
 		while(!aux.colaVacia() && existeEnRobin == false) {
 			if(idElemento != aux.primero())
 				aux.desacolar();
@@ -75,7 +74,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 			process.setNombre(idElemento);
 			process.setTiempoEst(TiempoEstimado);
 			process.setPID(contadoridProceso+1);
-			RobinDic.inicializarDiccionario();
+
 			RobinDic.agregar(process.getNombre(), process.getPID());
 			Robin.acolarPrioridad(process.getPID(), process.getTiempoEst()); //Acolo en ROBIN
 			contadoridProceso++; //actualizo numeración ID

@@ -5,14 +5,16 @@ import java.util.TimerTask;
 
 import api.AdministradorDeColasTDA;
 import apis.ColaPrioridadTDA;
-import impl.AdministradorDeColas.Server;
+
+import test.TestTPO;
 
 public class RoundRobin extends TimerTask{
 
 	private AdministradorDeColasTDA adminRR;
 	private Timer temporizador;
 	private ColaPrioridadTDA Robin;
-	private Server[] servidor;
+	private impl.Server[] servidor;
+
 	
 	public RoundRobin(AdministradorDeColasTDA admin) {
 		// TODO Auto-generated constructor stub
@@ -30,32 +32,43 @@ public class RoundRobin extends TimerTask{
 	public void Server(Server ser[]) {
 		this.servidor = ser;
 	}
+	
+	public Proceso llamarSiguiente() { 
+		Proceso proceso 
+		
+		return null;
+		
+	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		int segundosEnServer =  AdministradorDeColas.quantum;
-		servidor = new Server[10];
-/*		try {
-			
-			while(!Robin.colaVacia()) {
-				
-				
-			}
-			
-			
-			if(Robin.colaVacia()){
-				System.out.println("Finalizado el Round Robin");
-				this.temporizador.cancel();
-				return;
-			}
-			
-			
-			
-			} catch (InterruptedException ex) {
-			//System.out.println("Error de interrupción");
+		int cantidadServers = AdministradorDeColas.copCantidad;
+		int i=0, nroServer=0;
+		while (servidor[i].idProcesoEnServer == 0 && i < cantidadServers) {
+			servidor[i].idProcesoEnServer = Robin.primero();
+			servidor[i].tiempoLiberacion = Robin.prioridad();
+			Robin.desacolar();
 		}
-	*/
+		while(!Robin.colaVacia()) {
+			if(servidor[nroServer].tiempoLiberacion == 0) {
+				
+			}
+		
+
+			Thread.sleep(segundosEnServer);
+	
+		}
+			
+			
+		if(Robin.colaVacia()){
+			System.out.println("Finalizado el Round Robin");
+			this.temporizador.cancel();
+			return;
+		}
+			
+		
+	
 	}
 		
 }
