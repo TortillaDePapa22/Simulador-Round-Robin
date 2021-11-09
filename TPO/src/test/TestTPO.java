@@ -41,7 +41,6 @@ public class TestTPO {
 		admin.acolar(48,8);
 		
 		admin.desacolar();
-		
 		admin.acolar(100,1);
 		admin.acolar(48,8);
 		admin.acolar(42,8);

@@ -54,8 +54,10 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 //CHEQUEAR CHEQUEO, COMPARA NOMBRE CON PID!!!!!!!!!!!!!!!!!!!!!!!!!
 		//chequeo si elemento existe en cola Robin
 		while(!aux.colaVacia() && existeEnRobin == false) {
-			if(idElemento != aux.primero())
+			if(idElemento != RobinDic.recuperar(aux.primero())) {
 				aux.desacolar();
+
+			}
 			else {
 				existeEnRobin = true;
 				System.out.println("El elemento " + idElemento + " no se ha agregado, ya existe en la cola.");
@@ -67,13 +69,13 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 			process.setTiempoEst(TiempoEstimado);
 			process.setPID(contadoridProceso+1);
 
-			RobinDic.agregar(process.getNombre(), process.getPID());
+			RobinDic.agregar(process.getPID(), process.getNombre());
 			Robin.acolarPrioridad(process.getPID(), process.getTiempoEst()); //Acolo en ROBIN
 			contadoridProceso++; //actualizo numeración ID
 			String strID = String.format("%04d", contadoridProceso); //agrego 000
 			copIndice++; //actualizo copia indice
 			sumTiempos = sumTiempos + TiempoEstimado; //actualizo tiempo
-			System.out.println("Proceso numero: " + strID + " acolado");
+			System.out.println("Proceso numero: " + strID + " acolado, valor: " + process.getNombre());
 		
 		}
 	}
