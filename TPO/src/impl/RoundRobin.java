@@ -1,13 +1,12 @@
 package impl;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import api.AdministradorDeColasTDA;
 
+import api.AdministradorDeColasTDA;
 
 
 public class RoundRobin extends TimerTask{
@@ -18,7 +17,6 @@ public class RoundRobin extends TimerTask{
 
 
 	public RoundRobin(AdministradorDeColasTDA admin) {
-		// TODO Auto-generated constructor stub
 		this.adminRR = admin;
 	}
 
@@ -29,19 +27,25 @@ public class RoundRobin extends TimerTask{
 	public String horaEjecucion() {
 		Date horaEje = new Date();
 		SimpleDateFormat ft = new SimpleDateFormat (" HH:mm:ss ");
-		return ft.format(horaEje);
+		return ft.format(horaEje);	
+	}
+	
+	public void Listar() {
 		
 	}
 	
+	
 	public static String horaIni;
 	public static String horaFin;
-	public static String totalOperacion;
+	public long start = System.nanoTime();
+	public long end;
+
 	
 	int conta=0;
 	boolean primeraVez = false;
 	int cantServersFinalizados = 0;
-
 	
+
 	
 	@Override
 	public void run() {
@@ -61,7 +65,7 @@ public class RoundRobin extends TimerTask{
 				if(AdministradorDeColas.Robin.colaVacia() && primeraVez == false) { // Si la cola esta vacia, termino el proceso.
 					Date fechaFin = new Date(); 
 					SimpleDateFormat ft = new SimpleDateFormat ("E dd.MM.yyyy 'a las' HH:mm:ss ");
-					System.out.println("\n \nNo hay mas elementos en la cola. Finalizado el: " + ft.format(fechaFin));
+					System.out.println("\n \n+++++++ No hay mas elementos en la cola. Finalizado el: " + ft.format(fechaFin));
 					System.out.println(" ");
 					primeraVez = true;
 				}
@@ -116,11 +120,18 @@ public class RoundRobin extends TimerTask{
 					x++;
 					conti++;
 					if(conti==cantidadServers) {
-						Date fechaFin = new Date(); 
 						horaFin = horaEjecucion();
+						end = System.nanoTime();
+						long timeElapsed = end-start;
+						double timeElapsedSeg = (double) timeElapsed / 1000000000;
+						
+						Date fechaFin = new Date(); 
 						SimpleDateFormat ft = new SimpleDateFormat ("E dd.MM.yyyy 'a las' HH:mm:ss ");
+
 						System.out.println("\nROUND ROBIN FINALIZADO! NINGUN SERVIDOR TIENE PROCESOS PENDIENTES.\n \nFinalizado el: " + ft.format(fechaFin));
 						System.out.println("Hora inicio Simulador: "+ horaIni + "\nHora finalización Simulador: " + horaFin);
+						System.out.println("Tiempo total de ejecución: " + timeElapsedSeg + " segundos");						
+						
 						this.temporizador.cancel();
 						return;
 					}

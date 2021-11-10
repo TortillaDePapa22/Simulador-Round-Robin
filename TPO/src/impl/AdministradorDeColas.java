@@ -22,6 +22,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 	int contadoridProceso = 0, sumTiempos = 0, copIndice = 0;
 
 
+
 	@Override
 	public void inicializar(int cantidad) { //Inicializa sum de tiempo de espera de los puestos
 		// TODO Auto-generated method stub
@@ -106,7 +107,9 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 	@Override
 	public ColaPrioridadTDA programacion() {
 		// TODO Auto-generated method stub
+		System.out.println("\n\nProgramación de procesos:\n PID  / Tiempo estimado");
 		
+		imprimir(Robin);
 		return Robin;
 	}
 
@@ -248,4 +251,17 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		}
 	}
 
+	//Imprimir una cola prioridad
+	public static void imprimir (ColaPrioridadTDA c) {
+		ColaPrioridadTDA aux = new ColaPrioridadDA();
+		aux.inicializarCola();
+		while(!c.colaVacia()) {
+			String strID = String.format("%04d", c.primero());
+			System.out.println(" " + strID + " | " + c.prioridad());
+			aux.acolarPrioridad(c.primero(),c.prioridad());
+			c.desacolar();
+		}
+		pasar(aux,c);
+	}
+	
 }
