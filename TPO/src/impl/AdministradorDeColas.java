@@ -7,6 +7,7 @@ import java.util.Date;
 
 import api.AdministradorDeColasTDA;
 import api.ColaPrioridadTDA;
+import api.ConjuntoTDA;
 import api.DiccionarioSimpleTDA;
 import implTDA.ColaPrioridadDA;
 import implTDA.DicSimpleL;
@@ -353,6 +354,18 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		while(!origen.colaVacia()) {
 			destino.acolarPrioridad(origen.primero(), origen.prioridad());
 			origen.desacolar();
+		}
+	}
+	
+	
+	public static void imprimir (DiccionarioSimpleTDA ds) {
+		ConjuntoTDA claves = ds.claves(); //no se inicializa porque Claves ya es un conjunto existente
+		System.out.println("\nElementos acolados:");
+		while(!claves.conjuntoVacio()) {
+			int clave = claves.elegir();
+			String strID = String.format("%04d", clave); //agrego 000
+			System.out.println("PID: " + strID + " Tiempo estimado: " + ds.recuperar(clave));
+			claves.sacar(clave);
 		}
 	}
 }

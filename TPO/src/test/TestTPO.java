@@ -49,6 +49,14 @@ public class TestTPO {
 			i++;
 		}
 		
+		
+		admin.desacolar();
+		admin.desacolar();
+		admin.acolar(80, 4);
+		admin.acolar(108, 16);
+		
+//		AdministradorDeColas.imprimir(admin.elementos());
+		
 		admin.programacion(); // Imprimo la programación
 		
 		System.out.println("\n \nQuantum: " + admin.estimado()); //quantum
