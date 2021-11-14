@@ -31,19 +31,20 @@ public class RoundRobin extends TimerTask{
 	}
 	
 	public void Listar() {
-		
 	}
 	
 	
 	public static String horaIni;
 	public static String horaFin;
-	public long start = System.nanoTime();
+	public long start;
 	public long end;
 
 	
 	int conta=0;
-	boolean primeraVez = false;
 	int cantServersFinalizados = 0;
+	boolean primeraVez = false;
+	boolean procesoIniciado = false;
+
 	
 
 	
@@ -55,6 +56,11 @@ public class RoundRobin extends TimerTask{
 		int i=0; 
 		
 		try {
+			
+			if(procesoIniciado == false) { //Lo que hace esto es activar el timer de tiempo total de ejecucion.
+				start = System.currentTimeMillis();
+				procesoIniciado = true;
+			}
 			while (i < cantidadServers && AdministradorDeColas.vectSer[i].idProcesoEnServer == -1) { //Cargo los primeros procesos en los servidores
 				AdministradorDeColas.vectSer[i].idProcesoEnServer = AdministradorDeColas.Robin.primero();
 				AdministradorDeColas.vectSer[i].tiempoLiberacion = AdministradorDeColas.Robin.prioridad();
@@ -112,7 +118,7 @@ public class RoundRobin extends TimerTask{
 
 			int x = 0;
 			int conti=0; // este contador confirma si todos los servidores estan en 0.
-			System.out.println("----------------------------------------------");
+//			System.out.println("----------------------------------------------");
 			while(x< cantidadServers) {
 
 				if(AdministradorDeColas.vectSer[x].idProcesoEnServer == 0) {
@@ -121,15 +127,15 @@ public class RoundRobin extends TimerTask{
 					conti++;
 					if(conti==cantidadServers) {
 						horaFin = horaEjecucion();
-						end = System.nanoTime();
+						end = System.currentTimeMillis();
 						long timeElapsed = end-start;
-						double timeElapsedSeg = (double) timeElapsed / 1000000000;
+						double timeElapsedSeg = (double) timeElapsed /1000 ;
 						
 						Date fechaFin = new Date(); 
 						SimpleDateFormat ft = new SimpleDateFormat ("E dd.MM.yyyy 'a las' HH:mm:ss ");
 
 						System.out.println("\nROUND ROBIN FINALIZADO! NINGUN SERVIDOR TIENE PROCESOS PENDIENTES.\n \nFinalizado el: " + ft.format(fechaFin));
-						System.out.println("Hora inicio Simulador: "+ horaIni + "\nHora finalización Simulador: " + horaFin);
+						System.out.println("\nHora inicio Simulador: "+ horaIni + "\nHora finalización Simulador: " + horaFin);					
 						System.out.println("Tiempo total de ejecución: " + timeElapsedSeg + " segundos");						
 						
 						this.temporizador.cancel();
@@ -137,8 +143,8 @@ public class RoundRobin extends TimerTask{
 					}
 				}
 				else{
-					String strID = String.format("%04d", AdministradorDeColas.vectSer[x].idProcesoEnServer); //agrego 000
-					System.out.println("El servidor " + AdministradorDeColas.vectSer[x].idServer + " tiene el proceso " + strID + " y se libera en: " + AdministradorDeColas.vectSer[x].tiempoLiberacion + " segundos. Hora ejecución: " + horaEjecucion());
+//					String strID = String.format("%04d", AdministradorDeColas.vectSer[x].idProcesoEnServer); //agrego 000
+//					System.out.println("El servidor " + AdministradorDeColas.vectSer[x].idServer + " tiene el proceso " + strID + " y se libera en: " + AdministradorDeColas.vectSer[x].tiempoLiberacion + " segundos. Hora ejecución: " + horaEjecucion());
 					x++;
 				}
 				

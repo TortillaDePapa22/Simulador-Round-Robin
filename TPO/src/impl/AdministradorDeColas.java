@@ -1,9 +1,12 @@
 package impl;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import api.AdministradorDeColasTDA;
 import api.ColaPrioridadTDA;
-
 import api.DiccionarioSimpleTDA;
 import implTDA.ColaPrioridadDA;
 import implTDA.DicSimpleL;
@@ -19,6 +22,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 	Proceso process;
 	static int copCantidad;
 	static int quantum;
+	boolean RRiniciado = false;
 	int contadoridProceso = 0, sumTiempos = 0, copIndice = 0;
 
 
@@ -30,7 +34,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		Robin.inicializarCola();
 		RobinDic.inicializarDiccionario();
 		copCantidad = cantidad;
-		
+		RRiniciado = true;
 		vectSer = new Server[10]; //Maximo 10 servers.
 		
 		
@@ -54,7 +58,6 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		aux.inicializarCola();
 		copiar(Robin,aux);
 		
-//CHEQUEAR CHEQUEO, COMPARA NOMBRE CON PID!!!!!!!!!!!!!!!!!!!!!!!!!
 		//chequeo si elemento existe en cola Robin
 		while(!aux.colaVacia() && existeEnRobin == false) {
 			if(idElemento != RobinDic.recuperar(aux.primero())) {
@@ -83,6 +86,8 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 		}
 	}
 
+
+	@SuppressWarnings("static-access")
 	@Override
 	public void desacolar() {
 		int estimadoProcesoDesacolar, valor;
@@ -104,12 +109,112 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 	NOTA: En esta cola prioridad, la prioridad mayor es la del elemento de menor tiempo estimado de atención.
 	Es decir, el elemento con tiempo estimado de atención 0’ va primero que el de tiempo de atención 30’.
 	 */
+
+	@SuppressWarnings("static-access")
 	@Override
 	public ColaPrioridadTDA programacion() {
 		// TODO Auto-generated method stub
-		System.out.println("\n\nProgramación de procesos:\n PID  / Tiempo estimado");
+		ColaPrioridadTDA copiaRobin = new ColaPrioridadDA();
+		ColaPrioridadTDA colaProgramada = new ColaPrioridadDA();
+		copiaRobin.inicializarCola();
+		colaProgramada.inicializarCola();
+		copiar(Robin,copiaRobin);
+		estimado(); //SETEO EL QUANTUM
+		int vueltas = 0, i = 0;
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR, 12);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
 		
-		imprimir(Robin);
+		Date horaInicio = calendar.getTime();
+		SimpleDateFormat ft = new SimpleDateFormat (" HH:mm:ss ");
+		System.out.println("----------------------------------------------");
+		System.out.println("----------------------------------------------");
+		System.out.println("\n\nProgramación de procesos: (+ segundos que tarda desde incio ejecución)\n PID  | Nombre server   | Hora ejecución");
+		System.out.println("-----------------------------------------");
+		while(!copiaRobin.colaVacia()) {
+			while (i < copCantidad && AdministradorDeColas.vectSer[i].idProcesoEnServer == -1) { //Cargo los primeros procesos en los servidores
+				vectSer[i].idProcesoEnServer = copiaRobin.primero();
+				vectSer[i].tiempoLiberacion = copiaRobin.prioridad();
+				copiaRobin.desacolar();
+				i++;
+			}
+			if(vueltas == quantum) {//cuando llega al quantum, vuelo todos los procesos
+				i = 0;
+				System.out.println("---------------- QUANTUM ----------------");
+				while (i < copCantidad && !copiaRobin.colaVacia()) {
+					if(vectSer[i].tiempoLiberacion != 0) {
+						copiaRobin.acolarPrioridad(vectSer[i].idProcesoEnServer, vectSer[i].tiempoLiberacion);
+					}
+					vectSer[i].idProcesoEnServer = copiaRobin.primero();
+					vectSer[i].tiempoLiberacion = copiaRobin.prioridad();
+					copiaRobin.desacolar();
+					
+					i++;
+				}
+				vueltas=0;
+			}
+			vueltas++;
+		
+			i = 0;
+			boolean cambioVuelta = false;
+			if(cambioVuelta == false) { //ACA ACTUALIZO EL TIEMPO
+				calendar.add(calendar.SECOND, 1);
+				horaInicio = calendar.getTime();
+				cambioVuelta = true;
+			}
+			while(i < copCantidad ) { //Aca disminuyo en 1 por cada vuelta que hace.
+				if(vectSer[i].idProcesoEnServer >0) 
+					vectSer[i].tiempoLiberacion--;					//Si a algun proceso en algun servidor no le resta tiempo de procesamiento,
+				if(vectSer[i].tiempoLiberacion == 0) {			//Entra el siguiente proceso en la cola.
+						String strID = String.format("%04d", vectSer[i].idProcesoEnServer);
+						System.out.println(" " + strID + " |\t " + vectSer[i].nombreServer + " \t| Hora: " + ft.format(horaInicio));
+						//System.out.println("El proceso " + strID + " se ejecutará en el " + vectSer[i].nombreServer + " a las " + ft.format(horaInicio) + sumaTotalVueltas);
+						if(!copiaRobin.colaVacia()) {
+							vectSer[i].idProcesoEnServer = copiaRobin.primero();
+							vectSer[i].tiempoLiberacion = copiaRobin.prioridad();
+							copiaRobin.desacolar();
+						}
+						else {
+							vectSer[i].idProcesoEnServer = 0;
+							vectSer[i].tiempoLiberacion = 0;
+						}	
+				}
+				i++;
+			}
+		}
+		
+		if(copiaRobin.colaVacia()) {
+			i=0;
+			System.out.println(" ++++++++++++++ Cola vacía ++++++++++++++ ");
+			int mayorTiempoRestante = 0;
+			while(i<copCantidad) {
+				if(i==0) 
+					mayorTiempoRestante = vectSer[0].tiempoLiberacion;
+				calendar.add(calendar.SECOND, vectSer[i].tiempoLiberacion);
+				horaInicio = calendar.getTime();
+				String strID = String.format("%04d", vectSer[i].idProcesoEnServer);
+				System.out.println(" " + strID + " |\t " + vectSer[i].nombreServer + " \t| Hora: " + ft.format(horaInicio));
+				if(vectSer[i].tiempoLiberacion > mayorTiempoRestante) 
+					mayorTiempoRestante = vectSer[i].tiempoLiberacion;
+				
+				calendar.add(calendar.SECOND, -vectSer[i].tiempoLiberacion);
+				i++;
+			}
+			calendar.add(calendar.SECOND, mayorTiempoRestante);
+			horaInicio = calendar.getTime();
+			System.out.println("\nTiempo total de ejecución estimado:" + ft.format(horaInicio));
+		}
+		
+		i=0;
+		while(i<copCantidad) {
+			vectSer[i].idProcesoEnServer = -1;
+			vectSer[i].tiempoLiberacion = 0;
+			i++;
+		}
+		
+		//imprimir(Robin);
 		return Robin;
 	}
 
@@ -123,7 +228,7 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 	public int primero() {
 		// TODO Auto-generated method stub
 
-		return this.Robin.primero();
+		return AdministradorDeColas.Robin.primero();
 	}
 
 	
@@ -250,18 +355,18 @@ public class AdministradorDeColas implements AdministradorDeColasTDA{
 			origen.desacolar();
 		}
 	}
-
-	//Imprimir una cola prioridad
-	public static void imprimir (ColaPrioridadTDA c) {
-		ColaPrioridadTDA aux = new ColaPrioridadDA();
-		aux.inicializarCola();
-		while(!c.colaVacia()) {
-			String strID = String.format("%04d", c.primero());
-			System.out.println(" " + strID + " | " + c.prioridad());
-			aux.acolarPrioridad(c.primero(),c.prioridad());
-			c.desacolar();
-		}
-		pasar(aux,c);
-	}
-	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

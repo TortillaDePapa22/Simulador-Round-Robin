@@ -26,6 +26,20 @@ public class TestTPO {
 		admin.inicializar(cantidadPuestos); //Inicializo servers
 		System.out.println("\n-------------------------------------------------\n");
 
+		/*
+		admin.acolar(99, 1);
+		admin.acolar(98, 2);
+		admin.acolar(97, 3);
+		admin.acolar(96, 4);
+		admin.acolar(95, 5);
+		admin.acolar(94, 6);
+		admin.acolar(93, 7);
+		admin.acolar(92, 8);
+		admin.acolar(91, 9);
+		admin.acolar(90, 9);
+		admin.acolar(50, 9);
+		admin.acolar(70, 9);
+		*/
 		
 		while(i < 40) { //acolo 40 numeros al azar
 			valor = i;
@@ -34,7 +48,6 @@ public class TestTPO {
 			admin.acolar(valor, tiempo);
 			i++;
 		}
-		
 		
 		admin.programacion(); // Imprimo la programación
 		
